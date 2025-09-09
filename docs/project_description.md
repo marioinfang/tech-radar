@@ -5,5 +5,6 @@ Die Projektbeschreibung weicht nicht vom vorgegebenen Projekt ab und ist hier zu
 - **Frontend:** Angular
   - **UI-Components:** Angular Material
   - **Tech-Radar:** D3.js
-- **Backend:** Nest.js
-- **Datenbank:** PostgreSQL
+- **Backend:** Express JS
+  -  **Environment Var.** dotenv
+- **Datenbank:** Mongo DB
