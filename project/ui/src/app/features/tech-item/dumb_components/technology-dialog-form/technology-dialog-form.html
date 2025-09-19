@@ -1,0 +1,42 @@
+<mat-dialog-content>
+  <form [formGroup]="technologyForm">
+    <mat-form-field class="form-field">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" type="text" maxlength="25">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Category</mat-label>
+      <mat-select formControlName="category">
+        @for (category of TechnologyCategories; track category) {
+          <mat-option value="{{category}}">{{category}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Classification</mat-label>
+      <mat-select formControlName="classification">
+        @for (classification of TechnologyClassifications; track classification) {
+          <mat-option value="{{classification}}">{{classification}}</mat-option>
+        }
+        <mat-option value="{{null}}">Choose classification</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Technology description</mat-label>
+      <input matInput type="text" formControlName="technologyDescription" maxlength="200">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Classification description</mat-label>
+      <input matInput type="text" formControlName="classificationDescription" maxlength="200">
+    </mat-form-field>
+    <div class="form-field">
+      <mat-label>Publish</mat-label>
+      <mat-slide-toggle formControlName="published"></mat-slide-toggle>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onSave()">Save</button>
+  <button mat-button (click)="onCancel()">Cancel</button>
+</mat-dialog-actions>
+
