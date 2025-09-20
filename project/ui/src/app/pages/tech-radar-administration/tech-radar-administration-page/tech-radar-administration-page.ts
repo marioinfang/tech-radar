@@ -1,13 +1,15 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {Technology} from '../../../models/technology.model';
-import {TechItemService} from '../../../features/tech-item/services/tech-item.service';
+import {TechnologyService} from '../../../components/services/technology.service';
 import {MatDialog} from '@angular/material/dialog';
 import {
   TechnologyDialogForm
 } from '../../../features/tech-item/dumb_components/technology-dialog-form/technology-dialog-form';
-import {TechnologyList} from '../../../features/tech-item/dumb_components/technology-list/technology-list';
+import {TechnologyList} from '../../../components/technology-list/technology-list';
 import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
+import {ListMode} from '../../../components/technology-list/list-mode.enum';
+import {TechnologyMapper} from '../../../models/update-technology-dto.model';
 
 @Component({
   selector: 'app-tech-radar-administration-page',
@@ -24,12 +26,14 @@ import {MatIcon} from '@angular/material/icon';
         new technology
       </button>
     </div>
-    <app-technology-list [technologies]="technologies" (editTechnology)="handleEditTechnology($event)" (deleteTechnology)="handleDeleteTechnology($event)"></app-technology-list>
+    <app-technology-list [technologies]="technologies" [listMode]="ListMode.MODIFIABLE" (editTechnology)="handleEditTechnology($event)" (deleteTechnology)="handleDeleteTechnology($event)"></app-technology-list>
   `,
   styles: ``
 })
 export class TechRadarAdministrationPage implements OnInit{
-  private techItemService = inject(TechItemService);
+  protected readonly ListMode = ListMode;
+
+  private technologyService = inject(TechnologyService);
   readonly dialog = inject(MatDialog);
 
   technologies: Technology[] = [];
@@ -47,34 +51,34 @@ export class TechRadarAdministrationPage implements OnInit{
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log(`Technology created ${result.technology}`);
-        this.techItemService.addTechItem(result.technology).subscribe();
+        this.technologyService.createTechnology(result.technology).subscribe();
         this.loadTechnologies()
       }
     })
   }
 
-  handleEditTechnology(techItem: Technology) {
+  handleEditTechnology(technology: Technology) {
     const dialogRef = this.dialog.open(TechnologyDialogForm, {
       width: '400px',
-      data: { technology: techItem }
+      data: { technology: technology }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.techItemService.updateTechItem(result.technology).subscribe();
+        this.technologyService.updateTechnology(result.technology._id, TechnologyMapper.toUpdateDto(technology)).subscribe();
         this.loadTechnologies()
       }
     })
   }
 
-  handleDeleteTechnology(techItem: Technology) {
-    this.techItemService.deleteTechItem(techItem._id!);
+  handleDeleteTechnology(technology: Technology) {
+    this.technologyService.deleteTechnology(technology._id!).subscribe();
     this.loadTechnologies();
   }
 
   // TODO: make this automatically without reload
   private loadTechnologies() {
-    this.techItemService.getTechItems().subscribe({
+    this.technologyService.getTechnologies().subscribe({
       next: technologies => this.technologies = technologies,
       error: err => console.log(err)
     });

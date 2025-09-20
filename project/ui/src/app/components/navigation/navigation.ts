@@ -25,7 +25,7 @@ import {RouterLink, RouterLinkActive} from '@angular/router';
       <mat-sidenav #sidenav [opened]="isNavOpen" mode="side">
         <mat-nav-list>
           <a mat-list-item routerLink="/radar" routerLinkActive="active">
-            <span matListItemTitle>Tech Radar</span>
+            <span matListItemTitle>Technology Radar</span>
           </a>
           <a mat-list-item routerLink="/admin" routerLinkActive="active">
             <span matListItemTitle>Administration</span>
@@ -41,7 +41,8 @@ import {RouterLink, RouterLinkActive} from '@angular/router';
           <button mat-icon-button (click)="toggleSidenav()">
             <mat-icon>menu</mat-icon>
           </button>
-          <span>Tech Radar</span>
+          <!-- TODO: Titel anpassen -->
+          <span>Technology Radar</span>
         </mat-toolbar>
 
         <div class="content">
@@ -71,11 +72,6 @@ import {RouterLink, RouterLinkActive} from '@angular/router';
 
     mat-nav-list {
       padding-top: 16px;
-    }
-
-    .active {
-      background-color: rgba(0, 0, 0, 0.04);
-      color: #3f51b5;
     }
 
     a[mat-list-item] {
