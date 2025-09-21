@@ -1,18 +1,55 @@
-### Get Technologies
-GET localhost:8000/technology
+@id =68d031807e7c559528002758
 
-### Get Technology
-@id =68bff892d075b39071c1b651
-GET localhost:8000/technology/{{id}}
-
-### Post Technology
-POST localhost:8000/technology
+### GET token
+POST localhost:8000/auth/login
 Content-Type: application/json
 
 {
+  "email": "",
+  "password": ""
+}
+> {%  client.global.set("jwt_token", response.body.token); %}
+
+### GET technologies
+GET localhost:8000/technology
+Authorization: Bearer {{jwt_token}}
+
+### GET published technologies
+GET localhost:8000/technology?published=true
+Authorization: Bearer {{jwt_token}}
+
+### GET technology by id
+GET localhost:8000/technology/{{id}}
+Authorization: Bearer {{jwt_token}}
+
+### POST technology
+POST localhost:8000/technology
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
   "name": "Node.js",
-  "category": "Framework",
-  "stage": "Test",
+  "category": "Frameworks",
+  "classification": "Trial",
   "technologyDescription": "TEEEEESSSTT",
   "classificationDescription": "JavaScript runtime environment"
+}
+
+
+### DELETE technology by id
+DELETE localhost:8000/technology/{{id}}
+Authorization: Bearer {{jwt_token}}
+
+### PUT technology
+PUT localhost:8000/technology/{{id}}
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "name": "Node.jss",
+  "category": "Frameworks",
+  "classification": "Hold",
+  "technologyDescription": "DESC",
+  "classificationDescription": "CLASSDESC",
+  "published": true
 }

@@ -1,10 +1,10 @@
-import { MongoClient } from 'mongodb';
+import mongoose from 'mongoose';
 
 export const connectDB = async () => {
-    const connectionString = `mongodb://localhost:27017`;
-    const client = await MongoClient.connect(connectionString);
-    const db = client.db('techradar');
-    const technologyCollection = db.collection('technologies');
-
-    return { db, technologyCollection };
+    try {
+        await mongoose.connect('mongodb://localhost:27017/technologyRadar');
+        console.log('MongoDB connected');
+    } catch (err) {
+        console.error('DB connection error', err);
+    }
 };

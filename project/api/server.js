@@ -1,20 +1,33 @@
 import express from 'express';
-import { technologyRouter } from './routes/technology.routes.js';
+import dotenv from 'dotenv';
 import {logger} from "./middlewares/logger.middleware.js";
 import {errorHandler} from "./middlewares/error-handler.middleware.js";
+import {verifyToken} from "./middlewares/auth.middleware.js";
+import {authRouter} from "./routes/auth.routes.js";
+import {technologyRouter} from './routes/technology.routes.js';
+import {connectDB} from "./config/db.config.js";
+import {mockData} from "./config/mockData.config.js";
 
 // Express Setup
 const server = express();
+
+// Environment Variables
+dotenv.config();
 
 // Middleware
 server.use(express.json())
 server.use(logger);
 
 // Routers
-server.use('/technology', technologyRouter);
+server.use('/auth', authRouter);
+server.use('/technology', verifyToken, technologyRouter);
 
 // Error Handler Middleware
 server.use(errorHandler);
 
-server.listen(8000);
-console.log('Server is running on port 8000');
+connectDB().then(async () => {
+    await mockData();
+    server.listen(8000, () => {
+        console.log(`Server is running on port ${8000}`);
+    });
+});

@@ -1,4 +1,6 @@
 import express from 'express';
+import {UserRole} from "../models/user.model.js";
+import {requireRole} from "../middlewares/role.middleware.js";
 import {
     getTechnologies,
     getTechnology,
@@ -9,10 +11,10 @@ import {
 
 const technologyRouter = express.Router();
 
-technologyRouter.get('/', getTechnologies);
-technologyRouter.get('/:id', getTechnology);
-technologyRouter.post('/', createTechnology);
-technologyRouter.put('/:id', updateTechnology);
-technologyRouter.delete('/:id', deleteTechnology);
+technologyRouter.get('/', requireRole(UserRole.CTO, UserRole.EMPLOYEE), getTechnologies);
+technologyRouter.get('/:id', requireRole(UserRole.CTO, UserRole.EMPLOYEE), getTechnology);
+technologyRouter.post('/', requireRole(UserRole.CTO), createTechnology);
+technologyRouter.put('/:id', requireRole(UserRole.CTO), updateTechnology);
+technologyRouter.delete('/:id', requireRole(UserRole.CTO), deleteTechnology);
 
 export { technologyRouter };
