@@ -1,7 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {Navigation} from './components/navigation/navigation';
-import {HttpClientModule, provideHttpClient} from '@angular/common/http';
+import {AuthService} from './features/login/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -10,5 +10,4 @@ import {HttpClientModule, provideHttpClient} from '@angular/common/http';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('ui');
 }

@@ -2,7 +2,7 @@ import {TechCategory} from './tech-category.enum';
 import {TechClassification} from './tech-classification.enum';
 
 export interface Technology {
-  _id?: string;
+  id?: string;
   name: string;
   category: TechCategory;
   classification?: TechClassification;

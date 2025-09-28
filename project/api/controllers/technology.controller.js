@@ -20,7 +20,6 @@ const getTechnologies = async (req, res) => {
 
     const technologies = await Technology.find(query);
 
-    console.log(technologies);
     res.json(technologies.map(toTechnologyDto));
 };
 
@@ -60,7 +59,6 @@ const updateTechnology = async (req, res) => {
         updatedTechnology,
         { new: true, runValidators: true }
     );
-
     return res.status(200).json(toTechnologyDto(result));
 }
 

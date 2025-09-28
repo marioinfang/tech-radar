@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {Technology} from '../../../models/technology.model';
+import {Technology} from '../../../models/technology.model.js';
 import {TechnologyService} from '../../../components/services/technology.service';
 import {MatDialog} from '@angular/material/dialog';
 import {
@@ -10,6 +10,7 @@ import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {ListMode} from '../../../components/technology-list/list-mode.enum';
 import {TechnologyMapper} from '../../../models/update-technology-dto.model';
+import {tap} from 'rxjs';
 
 @Component({
   selector: 'app-tech-radar-administration-page',
@@ -50,9 +51,11 @@ export class TechRadarAdministrationPage implements OnInit{
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(`Technology created ${result.technology}`);
-        this.technologyService.createTechnology(result.technology).subscribe();
-        this.loadTechnologies()
+        this.technologyService.createTechnology(result.technology).pipe(
+          tap(newTech => {
+            this.technologies = [...this.technologies, newTech];
+          })
+        ).subscribe();
       }
     })
   }
@@ -65,18 +68,25 @@ export class TechRadarAdministrationPage implements OnInit{
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.technologyService.updateTechnology(result.technology._id, TechnologyMapper.toUpdateDto(technology)).subscribe();
-        this.loadTechnologies()
+        this.technologyService.updateTechnology(result.technology.id, TechnologyMapper.toUpdateDto(result.technology)).pipe(
+          tap(updatedTech => {
+            this.technologies = this.technologies.map(tech =>
+              tech.id === updatedTech.id ? {...updatedTech} : tech
+            );
+          })
+        ).subscribe();
       }
     })
   }
 
   handleDeleteTechnology(technology: Technology) {
-    this.technologyService.deleteTechnology(technology._id!).subscribe();
-    this.loadTechnologies();
+    this.technologyService.deleteTechnology(technology.id!).pipe(
+      tap(() => {
+        this.technologies = this.technologies.filter(tech => tech.id !== technology.id);
+      })
+    ).subscribe();
   }
 
-  // TODO: make this automatically without reload
   private loadTechnologies() {
     this.technologyService.getTechnologies().subscribe({
       next: technologies => this.technologies = technologies,

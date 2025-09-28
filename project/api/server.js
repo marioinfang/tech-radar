@@ -7,6 +7,7 @@ import {authRouter} from "./routes/auth.routes.js";
 import {technologyRouter} from './routes/technology.routes.js';
 import {connectDB} from "./config/db.config.js";
 import {mockData} from "./config/mockData.config.js";
+import cookieParser from "cookie-parser";
 
 // Express Setup
 const server = express();
@@ -16,6 +17,7 @@ dotenv.config();
 
 // Middleware
 server.use(express.json())
+server.use(cookieParser());
 server.use(logger);
 
 // Routers

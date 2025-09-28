@@ -18,7 +18,7 @@
         @for (classification of TechnologyClassifications; track classification) {
           <mat-option value="{{classification}}">{{classification}}</mat-option>
         }
-        <mat-option value="{{null}}">Choose classification</mat-option>
+        <mat-option [value]="null">Choose classification</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field>

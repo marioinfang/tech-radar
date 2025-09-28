@@ -18,13 +18,14 @@ export const TechnologyCategory = {
 const technologySchema = new Schema({
     name: { type: String, required: true },
     category: { type: String, enum: TechnologyCategory, required: true },
-    classification: { type: String, enum: TechnologyClassification, required: true },
+    classification: { type: String, enum: TechnologyClassification },
     technologyDescription: { type: String, required: true },
-    classificationDescription: { type: String, required: true },
+    classificationDescription: { type: String },
     created: { type: Date, required: true },
     published: { type: Date },
     modified: { type: Date }
-});// dto/technology.dto.js
+});
+
 export const toTechnologyDto = (technology) => {
   return {
     id: technology._id.toString(),

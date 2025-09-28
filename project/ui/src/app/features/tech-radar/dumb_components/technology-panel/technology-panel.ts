@@ -5,7 +5,7 @@ import {
   MatExpansionPanelHeader,
   MatExpansionPanelTitle
 } from '@angular/material/expansion';
-import {Technology} from '../../../../models/technology.model';
+import {Technology} from '../../../../models/technology.model.js';
 
 @Component({
   selector: 'app-technology-panel',
@@ -35,6 +35,10 @@ import {Technology} from '../../../../models/technology.model';
     }
     .description-label {
       font-weight: bold;
+    }
+    :host {
+      display: block;
+      margin-bottom: 10px;
     }
   `,
   standalone: true

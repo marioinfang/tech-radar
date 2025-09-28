@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {Technology} from '../../models/technology.model';
-import {HttpClient} from '@angular/common/http';
+import {Technology} from '../../models/technology.model.js';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {UpdateTechnologyDto} from '../../models/update-technology-dto.model';
 
@@ -13,7 +13,12 @@ export class TechnologyService {
   }
 
   getTechnologies(): Observable<Technology[]> {
-    return this.http.get<Technology[]>('/api/technology');
+    return this.http.get<Technology[]>('/api/technology', {withCredentials: true});
+  }
+
+  getPublishedTechnologies(): Observable<Technology[]> {
+    let params = new HttpParams().set('published', 'true');
+    return this.http.get<Technology[]>('/api/technology', {withCredentials: true, params: params});
   }
 
   createTechnology(technology: Technology): Observable<Technology> {
@@ -21,7 +26,6 @@ export class TechnologyService {
   }
 
   deleteTechnology(technologyId: string): Observable<any> {
-    console.log(`Delete TechItem ${technologyId}`);
     return this.http.delete(`/api/technology/${technologyId}`);
   }
 

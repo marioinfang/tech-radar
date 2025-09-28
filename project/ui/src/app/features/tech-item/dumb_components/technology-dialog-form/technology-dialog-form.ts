@@ -9,7 +9,7 @@ import {MatOption, MatSelect} from '@angular/material/select';
 import {TechCategory} from '../../../../models/tech-category.enum';
 import {TechClassification} from '../../../../models/tech-classification.enum';
 import {MatSlideToggle} from '@angular/material/slide-toggle';
-import {Technology} from '../../../../models/technology.model';
+import {Technology} from '../../../../models/technology.model.js';
 
 @Component({
   selector: 'app-technology-dialog-form',
@@ -60,8 +60,16 @@ export class TechnologyDialogForm implements OnInit {
 
   onSave(): void {
     if (this.technologyForm.valid) {
+      const formData = this.technologyForm.getRawValue();
+      if (formData.classification === '') {
+        formData.classification = null;
+      }
+      if (formData.classificationDescription === '') {
+        formData.classificationDescription = null;
+      }
+
       this.dialog.close({
-        technology: { ...this.dialogData.technology, ...this.technologyForm.getRawValue() }
+        technology: { ...this.dialogData.technology, ...formData }
       });
     } else {
       this.technologyForm.markAllAsTouched();
@@ -76,9 +84,9 @@ export class TechnologyDialogForm implements OnInit {
     return this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(TechnologyDialogForm.NAME_MAX)]],
       category: ['', Validators.required],
-      classification: [''],
+      classification: [null as string | null],
       technologyDescription: ['', [Validators.required, Validators.maxLength(TechnologyDialogForm.DESC_MAX)]],
-      classificationDescription: [''],
+      classificationDescription: [null as string | null],
       published: [true, Validators.required],
     });
   }

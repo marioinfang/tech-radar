@@ -1,5 +1,5 @@
 import {Component, effect, input, OnInit, output} from '@angular/core';
-import {Technology} from '../../../../models/technology.model';
+import {Technology} from '../../../../models/technology.model.js';
 import * as d3 from 'd3';
 import {TechCategory} from '../../../../models/tech-category.enum';
 import {TechClassification} from '../../../../models/tech-classification.enum';
@@ -53,7 +53,6 @@ export class TechnologyRadar implements OnInit {
 
   createTechRadar(entries: Technology[]): void {
     const container = document.querySelector('.radar') as HTMLElement;
-    console.log(`test height: ${container.offsetHeight} width: ${container.offsetWidth}`);
     const radarSize = Math.min(container.offsetWidth, window.innerHeight * 0.8);
 
     const config: any = {
@@ -225,7 +224,7 @@ export class TechnologyRadar implements OnInit {
       const ring = Object.values(TechClassification).indexOf(entry.classification!) % 4;
       const seg = segment(quad, ring);
       const pt = seg.random();
-      return { ...entry, id: entry._id, quadrant: quad, ring, x: pt.x, y: pt.y, segment: seg, color: config.rings[ring].color, label: entry.name };
+      return { ...entry, id: entry.id, quadrant: quad, ring, x: pt.x, y: pt.y, segment: seg, color: config.rings[ring].color, label: entry.name };
     });
   }
 

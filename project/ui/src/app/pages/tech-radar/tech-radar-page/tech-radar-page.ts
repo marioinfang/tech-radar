@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {TechnologyService} from '../../../components/services/technology.service';
-import {Technology} from '../../../models/technology.model';
+import {Technology} from '../../../models/technology.model.js';
 import {TechnologyList} from '../../../components/technology-list/technology-list';
 import {ListMode} from '../../../components/technology-list/list-mode.enum';
 import {TechnologyRadar} from '../../../features/tech-radar/dumb_components/technology-radar/technology-radar';
@@ -38,7 +38,7 @@ export class TechRadarPage implements OnInit{
   highlightedTechnologyId?: String;
 
   ngOnInit() {
-    this.techItemService.getTechnologies().subscribe({
+    this.techItemService.getPublishedTechnologies().subscribe({
       next: technologies => this.technologies = technologies,
       error: err => console.log(err)
     });
@@ -46,6 +46,5 @@ export class TechRadarPage implements OnInit{
 
   handleSelectedTechnology(technologyId: String) {
     this.highlightedTechnologyId = technologyId;
-    console.log(`highlited ${technologyId}`);
   }
 }
