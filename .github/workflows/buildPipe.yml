@@ -27,7 +27,7 @@ jobs:
 
       - name: Install UI dependencies
         working-directory: project/ui
-        run: npm ci
+        run: npm install
 
       - name: Build UI Project
         working-directory: project/ui
@@ -39,4 +39,4 @@ jobs:
 
       - name: Install API dependencies
         working-directory: project/api
-        run: npm ci
+        run: npm install
