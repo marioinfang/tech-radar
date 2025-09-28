@@ -87,15 +87,102 @@ Die Architektur des Technologie-Radars orientiert sich an folgenden Prinzipien:
    - Frontend-Tests sichern die korrekte Darstellung und Interaktion der Benutzeroberflächen ab.
 
 ## 5. Bausteinsicht
+TODO
 
 ## 6. Laufzeitsicht
 
+### 6.1. Login
+![Login flow](img/sequenzdiagram-login.png)
+
+### 6.2. Create new Technology
+![Login flow](img/sequenzdiagram-newTechnology.png)
+
+### 6.3. Edit Technology
+![Login flow](img/sequenzdiagram-editTechnology.png)
+
+### 6.4. Delete Technology
+![Login flow](img/sequenzdiagram-deleteTechnology.png)
+
 ## 7. Verteilungssicht
+Die Anwendung wird vollständig lokal betrieben.
+- **Frontend (Angular)**: Wird lokal über ng serve gestartet und läuft im Browser des Entwicklers.
+- **Backend (Express.js)**: Läuft lokal als Node.js-Prozess auf demselben Rechner.
+- **MongoDB**: Läuft ebenfalls lokal (als Dienst oder Docker-Container) auf dem Entwicklungsrechner.
+Damit existiert keine verteilte Infrastruktur im klassischen Sinn. Alle Komponenten laufen auf einem einzelnen Host.
 
 ## 8. Querschnittliche Konzepte
+Dieses Kapitel beschreibt die übergreifenden Konzepte, die in mehreren Teilen des Systems Anwendung finden. 
+Sie gelten unabhängig von einzelnen Komponenten und betreffen die gesamte Architektur.
+
+### 8.1. Authentifizierung
+Der Zugriff auf den Radar ist nur für eingeloggte Benutzer vorgesehen.
+Dabei wird in zwei Rollen unterschieden:
+
+- **CTO***: besitzt vollen Zugriff auf alle Verwaltungsfunktionen und den Radar
+- **Employee**: besitzt Leserechte für den Radar
+
+Die Authentifizierung erfolgt hierbei JWT-basiert. 
+Tokens werden dabei in httpOnly-Cookies gespeichert, sodass sie im Frontend-JavaScript nicht manipuliert oder ausgelesen werden können.
+
+### 8.2. Kommuniaktion
+Das Frontend und das Backend kommunizieren ausschliesslich über eine REST-API.
+Dabei erfolgt der Datenaustausch im JSON Format.
+
+### 8.3. Fehlercodes
+Die Fehler des Backends werden mit spezifischen HTTP-Statuscodes dem Frontend mitgeteilt.
+
+### 8.4. Testing
+Für das Frontend wurden Unit-Tests mit Jasmine/Karma implementiert.
+
+### 8.5. Logging
+Alle eingehenden Aufrufe an das Backend werden zur Rückverfolgung geloggt.
+TODO: Anmeldungen der Benutzer werden ebenfalls mit dem Benutzernamen geloggt.
+
+### 8.6. Persistenz
+Die Daten zu den Technologien und Benutzern werden in einer Mongo-DB als JSON-Dokumente gespeichert.
+
 
 ## 9. Architekturentscheidungen
 
+### 9.1. Wahl des Frontend-Frameworks: Angular
+- **Alternativen:** React, Vue.js
+- **Entscheidung:** Angular
+- **Begründung:** Angular bietet ein klares Architektur-Framework mit eingebautem Routing, Formularmanagement und Dependency Injection. 
+                  Zudem wurden in den Unterrichtseinheiten Angular eingesetzt.
+
+### 9.2. Wahl des Backends: Express.js
+- **Alternativen:** NestJS, Spring Boot
+- **Entscheidung:** Express.js
+- **Begründung:** Schlank, weit verbreitet, gute Integration mit TypeScript und schnelle Umsetzbarkeit von REST-Endpunkten.
+                  Zudem wurden in den Unterrichtseinheiten Express.js eingesetzt.
+
+### 9.3. Datenbank: MongoDB
+- **Alternativen:** PostgreSQL, MySQL
+- **Entscheidung:** MongoDB
+- **Begründung:** Flexible Dokumentenstruktur für Technologien. Kein starres Schema notwendig, schnelle Entwicklungszyklen möglich.
+                  Zudem wurden in den Unterrichtseinheiten MongoDB eingesetzt.
+
+### 9.4. Authentifizierung & Autorisierung
+- **Alternativen:** Session-basiert, OAuth2
+- **Entscheidung:** JWT mit httpOnly-Cookies, rollenbasiert (CTO, Mitarbeiter)
+- **Begründung:** Sicherheit ohne Session-Management, einfache Integration mit Angular-Guards und Express-Middleware.
+                   Zudem wurden in den Unterrichtseinheiten JWT Authentifizierung und Autorisierung behandelt.
+
+### 9.5. Kommunikation Frontend – Backend
+- **Alternativen:** GraphQL, gRPC
+- **Entscheidung:** REST-API mit JSON
+- **Begründung:** Einfach und leicht testbar. Zudem wurde dies ebenfalls im Unterricht behandelt.
+
 ## 10. Qualitätsanforderungen
+| Qualitätsziel        | Beschreibung                                                                                       |
+|----------------------|---------------------------------------------------------------------------------------------------|
+| **Benutzerfreundlichkeit** | Einfache und übersichtliche Bedienung der Administration und des Viewers, intuitive Navigation. |
+| **Performance**          | Der Viewer soll auch bei mobilen Endgeräten mit 4G-Verbindungen innerhalb von 1 Sekunde laden.  |
+| **Sicherheit**           | Zugriff nur für authentifizierte Nutzer, Schutz der Daten gegen Manipulation und unbefugten Zugriff. |
+| **Testbarkeit**          | Kernfunktionen (z. B. Authentifizierung, Technologie-Verwaltung) sind durch Unit- und Integrationstests abgesichert. |
+| **Responsivität**        | Die Anwendung ist auf Desktop, Tablet und Smartphone nutzbar (responsive Design).                |
 
 ## 11. Risiken und technische Schulden
+- Erweiterung der **Testabdeckung** durch zusätzliche Unit-, Integration- und E2E-Tests.
+- Einführung eines **externen Authentifizierungsdienstes** wie Keycloak zur sicheren und skalierbaren Benutzerverwaltung.
+- Schrittweise Einführung von **Docker-Containern** und Aufbau einer einfachen CI/CD-Pipeline.
