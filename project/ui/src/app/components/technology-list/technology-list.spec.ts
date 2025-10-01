@@ -69,7 +69,7 @@ describe('TechnologyList', () => {
     const categoryHeaders = fixture.debugElement.queryAll(By.css('h2'));
     expect(categoryHeaders.length).toBe(Object.values(TechCategory).length);
 
-    // checks if the framework category has 2 two panels TODO: anzahl prüfen
+    // checks if the framework category has 2 two panels
     const frameworkSection = categoryHeaders.find(h => h.nativeElement.textContent.includes(TechCategory.FRAMEWORKS));
     expect(frameworkSection).toBeTruthy();
 

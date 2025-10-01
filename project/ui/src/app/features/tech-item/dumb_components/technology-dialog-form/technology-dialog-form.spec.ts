@@ -2,12 +2,21 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TechnologyDialogForm } from './technology-dialog-form';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {ReactiveFormsModule, Validators} from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import { MatButtonModule } from '@angular/material/button';
+import {TechCategory} from '../../../../models/tech-category.enum';
+import {Technology} from '../../../../models/technology.model';
+import {TechClassification} from '../../../../models/tech-classification.enum';
+import {ReactiveFormsModule} from '@angular/forms';
+
+// Mock data
+const mockTechnology: Technology = {
+  id: '1',
+  name: 'Angular',
+  category: TechCategory.FRAMEWORKS,
+  classification: TechClassification.ADOPT,
+  technologyDescription: 'Frontend framework',
+  classificationDescription: 'Widely used',
+  published: true
+} as Technology;
 
 describe('TechnologyDialogForm', () => {
   let component: TechnologyDialogForm;
@@ -16,20 +25,16 @@ describe('TechnologyDialogForm', () => {
 
   beforeEach(async () => {
     dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
+
     await TestBed.configureTestingModule({
       imports: [
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatSlideToggleModule,
-        MatButtonModule
+        TechnologyDialogForm,
+        ReactiveFormsModule
       ],
       providers: [
-      { provide: MatDialogRef, useValue: dialogRefSpy },
-      { provide: MAT_DIALOG_DATA, useValue: { technology: {} } }
-    ],
-      declarations: [TechnologyDialogForm]
+        { provide: MatDialogRef, useValue: dialogRefSpy },
+        { provide: MAT_DIALOG_DATA, useValue: { technology: mockTechnology } }
+    ]
   }).compileComponents();
 
   fixture = TestBed.createComponent(TechnologyDialogForm);
@@ -37,34 +42,59 @@ describe('TechnologyDialogForm', () => {
   fixture.detectChanges();
   });
 
-  it('should create the form with default values', () => {
-    expect(component.technologyForm).toBeTruthy();
-    expect(component.technologyForm.get('published')!.value).toBeTrue();
+  it('should show technology', () => {
+    expect(component.technologyForm.value.name).toBe(mockTechnology.name);
+    expect(component.technologyForm.value.category).toBe(mockTechnology.category);
+    expect(component.technologyForm.value.classification).toBe(mockTechnology.classification);
+    expect(component.technologyForm.value.technologyDescription).toBe(mockTechnology.technologyDescription);
+    expect(component.technologyForm.value.classificationDescription).toBe(mockTechnology.classificationDescription);
+    expect(component.technologyForm.value.published).toBe(mockTechnology.published);
   });
 
-  it('should close dialog with form value on save', () => {
-    component.technologyForm.patchValue({ name: 'Test' });
+  it('should validate name', () => {
+    component.technologyForm.patchValue({ name: '' });
+    expect(component.technologyForm.valid).toBeFalse();
+  });
+
+  it('should validate category', () => {
+    component.technologyForm.patchValue({ category: '' });
+    expect(component.technologyForm.valid).toBeFalse();
+  });
+
+  it('should validate technology desc', () => {
+    component.technologyForm.patchValue({ technologyDescription: '' });
+    expect(component.technologyForm.valid).toBeFalse();
+  });
+
+  it('should require classification when published is true', () => {
+    component.technologyForm.patchValue({ published: true, classification: '', classificationDescription: '' });
+    fixture.detectChanges();
+    expect(component.technologyForm.get('classification')?.hasError('required')).toBeTrue();
+    expect(component.technologyForm.get('classificationDescription')?.hasError('required')).toBeTrue();
+  });
+
+  it('should allow empty classification when published is false', () => {
+    component.technologyForm.patchValue({ published: false, classification: '', classificationDescription: '' });
+    fixture.detectChanges();
+    expect(component.technologyForm.get('classification')?.valid).toBeTrue();
+    expect(component.technologyForm.get('classificationDescription')?.valid).toBeTrue();
+  });
+
+  it('should close dialog on save if valid', () => {
     component.onSave();
-    expect(dialogRefSpy.close).toHaveBeenCalledWith(jasmine.objectContaining({
-      technology: jasmine.objectContaining({ name: 'Test' })
-    }));
+    expect(dialogRefSpy.close).toHaveBeenCalled();
+    const result = dialogRefSpy.close.calls.mostRecent().args[0];
+    expect(result.technology.name).toBe(mockTechnology.name);
   });
 
-  it('should close dialog without value on cancel', () => {
+  it('should not close dialog if invalid', () => {
+    component.technologyForm.patchValue({ name: '' });
+    component.onSave();
+    expect(dialogRefSpy.close).not.toHaveBeenCalled();
+  });
+
+  it('should close on cancel', () => {
     component.onCancel();
     expect(dialogRefSpy.close).toHaveBeenCalledWith();
-  });
-
-  it('should add/remove validators based on published toggle', () => {
-    const classification = component.technologyForm.get('classification')!;
-    const classDescription = component.technologyForm.get('classificationDescription')!;
-
-    component.technologyForm.get('published')!.setValue(true);
-    expect(classification.hasValidator(Validators.required)).toBeTrue();
-    expect(classDescription.hasValidator(Validators.required)).toBeTrue();
-
-    component.technologyForm.get('published')!.setValue(false);
-    expect(classification.validator).toBeNull();
-    expect(classDescription.validator).toBeNull();
   });
 });
