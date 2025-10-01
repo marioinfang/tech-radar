@@ -37,14 +37,6 @@ jobs:
         working-directory: project/ui
         run: npm run test -- --watch=false --browsers=ChromeHeadless --code-coverage
 
-      - name: Upload UI Coverage to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: project/ui/coverage/**/lcov.info
-          flags: ui
-          fail_ci_if_error: true
-
       - name: Install API dependencies
         working-directory: project/api
         run: npm install
