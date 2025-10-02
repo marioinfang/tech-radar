@@ -29,7 +29,11 @@ server.use(errorHandler);
 
 connectDB().then(async () => {
     await mockData();
-    server.listen(8000, () => {
-        console.log(`Server is running on port ${8000}`);
+    const PORT = process.env.PORT || 3000;
+    connectDB().then(async () => {
+        await mockData();
+        server.listen(PORT, '0.0.0.0', () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
     });
 });

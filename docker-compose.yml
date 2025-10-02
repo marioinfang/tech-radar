@@ -1,0 +1,41 @@
+services:
+  # mongo db
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+    environment:
+      # env variables
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
+
+  # express
+  backend:
+    build:
+      context: project/api
+      dockerfile: Dockerfile
+    container_name: tech-radar-api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_URI: ${BACKEND_MONGO_URI}
+      PORT: 3000
+
+  frontend:
+    build:
+      context: project/ui
+      dockerfile: Dockerfile
+    container_name: tech-radar-ui
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:
