@@ -87,7 +87,34 @@ Die Architektur des Technologie-Radars orientiert sich an folgenden Prinzipien:
    - Frontend-Tests sichern die korrekte Darstellung und Interaktion der Benutzeroberflächen ab.
 
 ## 5. Bausteinsicht
-TODO
+### Frontend UI:
+Ist für die Benutzeroberfläche verantwortlich, über welche die Benutzer den Technologie-Radar abrufen und mit ihm
+interagieren können. Er regelt auch die Benutzerführung und bietet Formulare für CTO's an damit die Technologien
+verwaltet werden können.
+Es kommuniziert über REST-API-Aufrufe mit dem Backend, um Daten abzurufen oder Aktionen wie die Authentifizierung 
+und Autorisierung auszuführen.
+
+### Backend API:
+Die Backend API stellt verschiedene REST-Endpoints dem UI zur Verfügung.
+- Authentifizierung
+- Abholen von Technologien
+- Änderung von Technologien
+- Speichern von neuen Technologien
+
+Dafür kommuniziert sie mit der Mongo Datenbank und persistiert dort die Daten.
+
+### **Datenbank**:
+Verantwortlich für die Speicherung von Benutzerdaten und Technologien.
+
+### UI Component
+![UI Diagram](img/ConatinerUI.png)
+
+
+
+### API Component
+![API Diagram](img/ContainerAPI.png)
+
+
 
 ## 6. Laufzeitsicht
 
