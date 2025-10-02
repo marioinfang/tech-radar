@@ -21,7 +21,6 @@ import {TechnologyRadar} from '../../../features/tech-radar/dumb_components/tech
     #tech-radar {
       display: grid;
       grid-template-columns: 15% 60% 15%;
-      grid-template-rows: 80vh auto;
     }
     app-technology-radar {
       grid-column: 2;

@@ -141,24 +141,39 @@ export class TechnologyRadar implements OnInit {
   }
 
   private drawQuadrantLabels(svg: any, config: any) {
-    function cartesian(polar: { t: number; r: number }) {
-      return { x: polar.r * Math.cos(polar.t), y: polar.r * Math.sin(polar.t) };
-    }
+    const R = config.rings[3].radius + 2;
+
+    const paths = [
+      { id: 'path-0', d: `M 0,${-R} A ${R},${R} 0 0,1 ${R},0` },
+
+      { id: 'path-1', d: `M ${-R},0 A ${R},${R} 0 0,1 0,${-R}` },
+
+      { id: 'path-2', d: `M 0,${R} A ${R},${R} 0 0,1 ${-R},0` },
+
+      { id: 'path-3', d: `M ${R},0 A ${R},${R} 0 0,1 0,${R}` },
+    ];
+
+    svg.selectAll('.quadrant-path')
+      .data(paths)
+      .join('path')
+      .attr('id', (d: {id: string, d: string}) => d.id)
+      .attr('d', (d: {id: string, d: string}) => d.d)
+      .style('fill', 'none')
+      .style('stroke', 'none');
 
     config.quadrants.forEach((quad: any, i: number) => {
-      const angle = (i * Math.PI / 2) + Math.PI / 4;
-      const r = config.rings[3].radius + 40;
-      const pos = cartesian({ t: angle, r });
+      const fontSize = Math.max(10, config.width * 0.035);
 
-      svg.append('text')
-        .text(quad.name)
-        .attr('x', pos.x)
-        .attr('y', pos.y)
-        .attr('text-anchor', 'middle')
-        .attr('alignment-baseline', 'middle')
-        .style('font-size', '16px')
+      const text = svg.append('text')
+        .style('font-size', `${fontSize}px`)
         .style('font-weight', 'bold')
         .style('fill', '#666');
+
+      text.append('textPath')
+        .attr('href', `#${paths[i].id}`)
+        .attr('startOffset', '50%')
+        .attr('text-anchor', 'middle')
+        .text(quad.name);
     });
   }
 

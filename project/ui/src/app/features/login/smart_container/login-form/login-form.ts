@@ -51,11 +51,6 @@ import {AuthService} from '../../services/auth.service';
     </mat-card>
   `,
   styles: `
-    :host {
-      display: grid;
-      grid-template-columns: 1fr;
-      grid-template-rows: 1fr;
-    }
     mat-form-field {
       width: 100%;
     }

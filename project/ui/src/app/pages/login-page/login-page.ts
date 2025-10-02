@@ -13,13 +13,16 @@ import {LoginForm} from '../../features/login/smart_container/login-form/login-f
   `,
   styles: `
     :host {
-        display: grid;
-        grid-template-rows: 25% 50% 25%;
-        grid-template-columns: 25% 50% 25%;
-        height: 100vh;
+      display: grid;
+      grid-template-columns: 25% 50% 25%;
     }
+    @media only screen and (max-width: 600px) {
+      :host {
+        grid-template-columns: 10% 80% 10%;
+      }
+    }
+
     div {
-      grid-row: 2;
       grid-column: 2;
       display: flex;
       justify-content: center;
