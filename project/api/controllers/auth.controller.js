@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import {logEvent} from "../utils/logEvent.js";
 
 const login = async (req, res) => {
     const { email, password } = req.body;
@@ -18,6 +19,11 @@ const login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid email or password' });
+        }
+
+        if (user.role === 'CTO') {
+            const logMessage = `CTO LOGIN erfolgreich: Benutzer ${user.email} hat sich angemeldet.`;
+            logEvent(logMessage);
         }
 
         const token = jwt.sign({ email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
