@@ -25,6 +25,7 @@ services:
       - mongodb
     environment:
       MONGO_URI: ${BACKEND_MONGO_URI}
+      JWT_SECRET: ${JWT_SECRET}
       PORT: 3000
 
   frontend:
